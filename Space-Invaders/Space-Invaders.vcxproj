@@ -148,6 +148,7 @@
     <ClCompile Include="source\Enemy\EnemyModel.cpp" />
     <ClCompile Include="source\Enemy\EnemyService.cpp" />
     <ClCompile Include="source\Enemy\EnemyView.cpp" />
+    <ClCompile Include="source\Entity\Bullet.cpp" />
     <ClCompile Include="source\Event\EventService.cpp" />
     <ClCompile Include="source\Gameplay\GameplayController.cpp" />
     <ClCompile Include="source\Gameplay\GameplayService.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="source\UI\SplashScreen\SplashScreenUIController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="header\Entity\Bullet.h" />
     <ClInclude Include="header\Entity\EntityConfig.h" />
     <ClInclude Include="header\Collision\CollisionService.h" />
     <ClInclude Include="header\Collision\ICollider.h" />

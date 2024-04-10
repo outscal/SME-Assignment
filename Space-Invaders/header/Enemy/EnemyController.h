@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "../Collision/ICollider.h"
+#include "../Entity/Bullet.h"
 
 namespace Enemy
 {
@@ -29,6 +30,10 @@ namespace Enemy
         sf::Vector2f getRandomInitialPosition();
         void handleOutOfBounds();
         virtual void destroy();
+    private:
+        float bulletCooldown;
+        float elapsedBulletCooldown;
+        std::vector<Bullet::Bullet*> enemyBullets;
        
     public:
         EnemyController(EnemyType type);
@@ -46,5 +51,7 @@ namespace Enemy
         virtual void onCollision(ICollider* other_collider) override;
 
         virtual void processScore();
+        void fireBullet();
+        void updateEnemyBullets();
     };
 }

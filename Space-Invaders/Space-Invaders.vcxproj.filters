@@ -53,6 +53,7 @@
     <ClCompile Include="source\UI\UIElement\TextView.cpp" />
     <ClCompile Include="source\UI\UIElement\UIView.cpp" />
     <ClCompile Include="source\UI\SplashScreen\SplashScreenUIController.cpp" />
+    <ClCompile Include="source\Entity\Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Entity\EntityConfig.h" />
@@ -113,5 +114,6 @@
     <ClInclude Include="header\UI\UIElement\TextView.h" />
     <ClInclude Include="header\UI\UIElement\UIView.h" />
     <ClInclude Include="header\UI\SplashScreen\SplashScreenUIController.h" />
+    <ClInclude Include="header\Entity\Bullet.h" />
   </ItemGroup>
 </Project>
