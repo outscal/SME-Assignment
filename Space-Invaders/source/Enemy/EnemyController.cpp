@@ -34,6 +34,52 @@ namespace Enemy
 		enemy_model->initialize();
 		enemy_model->setEnemyPosition(getRandomInitialPosition());
 		enemy_view->initialize(this);
+		bulletCooldown = 1.0f;
+	}
+
+	void EnemyController::fireBullet()
+	{
+		if (elapsedBulletCooldown < bulletCooldown)
+		{
+			// Still cooling down, cannot fire yet
+			return;
+		}
+
+		// Create a new bullet
+		Bullet::Bullet* bullet = new Bullet::Bullet();
+
+		// Set position based on enemy's position
+		bullet->setPosition(getEnemyPosition());
+
+		// Set velocity for the bullet
+		// Example velocity: (5.f, 0.f) for a bullet moving horizontally to the right
+		bullet->setVelocity(sf::Vector2f(5.f, 0.f));
+
+		// Add the bullet to the enemyBullets vector
+		enemyBullets.push_back(bullet);
+
+		// Reset the cooldown timer
+		elapsedBulletCooldown = 0.f;
+	}
+
+	void EnemyController::updateEnemyBullets()
+	{
+		// Update position of each bullet
+		for (auto it = enemyBullets.begin(); it != enemyBullets.end();)
+		{
+			(*it)->update(); // Update bullet position
+
+			// Check if bullet is out of bounds
+			if ((*it)->isOutOfBounds(*ServiceLocator::getInstance()->getGraphicService()->getGameWindow()))
+			{
+				delete (*it); // Free memory for the bullet
+				it = enemyBullets.erase(it); // Remove bullet from vector
+			}
+			else
+			{
+				++it;
+			}
+		}
 	}
 
 	void EnemyController::update()
@@ -41,6 +87,7 @@ namespace Enemy
 		move();
 		enemy_view->update();
 		handleOutOfBounds();
+		updateEnemyBullets();
 	}
 
 	void EnemyController::render()

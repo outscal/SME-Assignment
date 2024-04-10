@@ -22,7 +22,7 @@ namespace Player
 	using namespace Main;
 	using namespace Gameplay;
 
-	PlayerController::PlayerController()
+	PlayerController::PlayerController() : elapsedBulletCooldown(0.f)
 	{
 		player_view = new PlayerView();
 		player_model = new PlayerModel();
@@ -38,6 +38,7 @@ namespace Player
 	{
 		player_model->initialize();
 		player_view->initialize(this);
+		bulletCooldown = 0.2f;
 	}
 
 	void PlayerController::update()
@@ -55,6 +56,12 @@ namespace Player
 
 		updatePowerupDuration();
 		player_view->update();
+
+		// Process player input and update bullets
+		processPlayerInput();
+		updatePlayerBullets();
+		elapsedBulletCooldown += ServiceLocator::getInstance()->getTimeService()->getDeltaTime();
+
 	}
 
 	void PlayerController::render()
@@ -202,6 +209,58 @@ namespace Player
 
 		//if (event_service->pressedLeftMouseButton()) 
 		//	processBulletFire();
+		
+		// Check if left mouse button is pressed to fire bullet
+		if (event_service->pressedLeftMouseButton())
+			fireBullet();
+
+	}
+
+	void PlayerController::fireBullet()
+	{
+		if (elapsedBulletCooldown < bulletCooldown)
+		{
+			// Still cooling down, cannot fire yet
+			return;
+		}
+
+		// Create a new bullet
+		Bullet::Bullet* bullet = new Bullet::Bullet();
+
+		// Set position slightly above the player's position
+		sf::Vector2f playerPosition = getPlayerPosition();
+		bullet->setPosition(sf::Vector2f(playerPosition.x, playerPosition.y - 20.0f)); // Adjust the offset as needed
+
+		// Set velocity for the bullet
+		// Example velocity: (0.f, -5.f) for a bullet moving vertically upwards
+		bullet->setVelocity(sf::Vector2f(0.f, -500.f));
+
+		// Add the bullet to the playerBullets vector
+		playerBullets.push_back(bullet);
+
+		// Reset the cooldown timer
+		elapsedBulletCooldown = 0.f;
+
+	}
+
+	void PlayerController::updatePlayerBullets()
+	{
+		// Update position of each bullet
+		for (auto it = playerBullets.begin(); it != playerBullets.end();)
+		{
+			(*it)->update(); // Update bullet position
+
+			// Check if bullet is out of bounds
+			if ((*it)->isOutOfBounds(*ServiceLocator::getInstance()->getGraphicService()->getGameWindow()))
+			{
+				delete (*it); // Free memory for the bullet
+				it = playerBullets.erase(it); // Remove bullet from vector
+			}
+			else
+			{
+				++it;
+			}
+		}
 	}
 
 	void PlayerController::moveLeft()

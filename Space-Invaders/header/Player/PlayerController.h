@@ -3,7 +3,12 @@
 #include "../Collision/ICollider.h"
 #include "../../header/Powerup/PowerupConfig.h"
 #include "../../header/Player/PlayerModel.h"
-#include "../../header/Player/PlayerView.h"
+#include "../Entity/Bullet.h"
+
+// Forward declaration of PlayerView class
+namespace Player {
+    class PlayerView;
+}
 
 namespace Player
 {
@@ -14,9 +19,14 @@ namespace Player
         float elapsed_rapid_fire_duration;
         float elapsed_tripple_laser_duration;
 
+        float bulletCooldown;
+        float elapsedBulletCooldown;
+        std::vector<Bullet::Bullet*> playerBullets;
+
+
         float elapsed_fire_duration;
         float elapsed_freez_duration;
-
+        
         PlayerView* player_view;
         PlayerModel* player_model;
 
@@ -61,5 +71,7 @@ namespace Player
 
         const sf::Sprite& getColliderSprite() override;
         void onCollision(ICollider* other_collider) override;
+        void fireBullet();
+        void updatePlayerBullets();
     };
 }
